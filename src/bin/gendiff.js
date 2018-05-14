@@ -1,12 +1,13 @@
 #!/usr/bin/env node
 
 import program from 'commander';
+import diff from '..';
 
 program
   .version('0.0.1')
   .arguments('<firstConfig> <secondConfig>')
   .description('Compares two configuration files and shows a difference.')
   .option('-f, --format [type]', 'Output format')
-  .action();
+  .action((firstConfig, secondConfig) => diff(firstConfig, secondConfig));
 
 program.parse(process.argv);
