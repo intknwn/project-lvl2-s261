@@ -4,7 +4,7 @@ import program from "commander";
 
 program
   .version('0.0.1')
-  .arguments('[options] <firstConfig> <firstConfig>')
+  .arguments('<firstConfig> <firstConfig>')
   .description('Compares two configuration files and shows a difference.')
   .option('-f, --format [type]','Output format')
   .action()
