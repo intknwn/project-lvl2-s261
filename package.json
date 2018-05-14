@@ -1,0 +1,34 @@
+{
+  "name": "gendiff-by-intknwn",
+  "version": "1.0.1",
+  "description": "CLI utility which compares two configuration files and shows a difference.",
+  "main": "index.js",
+  "scripts": {
+    "babel-node": "babel-node",
+    "build": "NODE_ENV=production babel src --out-dir dist --source-maps inline",
+    "prepublishOnly": "npm run build",
+    "eslint": "eslint"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/intknwn/project-lvl2-s261.git"
+  },
+  "author": "Dmitriy Nekludov",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/intknwn/project-lvl2-s261/issues"
+  },
+  "homepage": "https://github.com/intknwn/project-lvl2-s261#readme",
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-core": "^6.26.3",
+    "babel-preset-env": "^1.7.0",
+    "babel-preset-stage-0": "^6.24.1"
+  },
+  "bin": {
+    "gendiff": "dist/bin/gendiff.js"
+  },
+  "files": [
+    "dist"
+  ]
+}
