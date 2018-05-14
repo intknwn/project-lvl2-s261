@@ -22,13 +22,20 @@
   "devDependencies": {
     "babel-cli": "^6.26.0",
     "babel-core": "^6.26.3",
+    "babel-eslint": "^8.2.3",
     "babel-preset-env": "^1.7.0",
-    "babel-preset-stage-0": "^6.24.1"
+    "babel-preset-stage-0": "^6.24.1",
+    "eslint": "^4.19.1",
+    "eslint-config-airbnb-base": "^12.1.0",
+    "eslint-plugin-import": "^2.11.0"
   },
   "bin": {
     "gendiff": "dist/bin/gendiff.js"
   },
   "files": [
     "dist"
-  ]
+  ],
+  "dependencies": {
+    "commander": "^2.15.1"
+  }
 }
