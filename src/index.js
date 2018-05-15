@@ -1,38 +1,65 @@
 import fs from 'fs';
 import _ from 'lodash';
+import path from 'path';
+import yaml from 'js-yaml';
 
-const getObject = (filePath) => {
-  let contents;
+const diffs = [
+  {
+    type: 'unmodified',
+    check: (obj1, obj2, key) => obj1[key] === obj2[key],
+    render: (obj1, obj2, key) => `    ${key}: ${obj1[key]}`,
+  },
+  {
+    type: 'modified',
+    check: (obj1, obj2, key) => obj1[key] && obj2[key] && obj1[key] !== obj2[key],
+    render: (obj1, obj2, key) => `  + ${key}: ${obj2[key]}\n  - ${key}: ${obj1[key]}`,
+  },
+  {
+    type: 'deleted',
+    check: (obj1, obj2, key) => !_.has(obj2, key),
+    render: (obj1, obj2, key) => `  - ${key}: ${obj1[key]}`,
+  },
+  {
+    type: 'added',
+    check: (obj1, obj2, key) => !_.has(obj1, key),
+    render: (obj1, obj2, key) => `  + ${key}: ${obj2[key]}`,
+  },
+];
+
+const parsers = {
+  '.json': JSON.parse,
+  '.yml': yaml.safeLoad,
+};
+
+const getParser = ext => parsers[ext];
+
+const getData = (filePath) => {
   try {
-    contents = fs.readFileSync(filePath, 'utf8');
+    return fs.readFileSync(filePath, 'utf8');
   } catch (err) {
     return undefined;
   }
+};
 
-  return JSON.parse(contents);
+const makeDiffsArr = (obj1, obj2) => {
+  const keys = _.union(_.keys(obj1), _.keys(obj2));
+  return keys.map((key) => {
+    const { render } = _.find(diffs, ({ check }) => check(obj1, obj2, key));
+    return render(obj1, obj2, key);
+  });
 };
 
 export default (firstConfig, secondConfig) => {
-  const config1 = getObject(firstConfig);
-  const config2 = getObject(secondConfig);
-  if (!config1 || !config2) {
+  const data1 = getData(firstConfig);
+  const data2 = getData(secondConfig);
+  if (!data1 || !data2) {
     return undefined;
   }
+  const ext1 = path.extname(firstConfig);
+  const ext2 = path.extname(secondConfig);
+  const obj1 = getParser(ext1)(data1);
+  const obj2 = getParser(ext2)(data2);
 
-  const shared = _.intersection(_.keys(config1), _.keys(config2));
-  const deleted = _.difference(_.keys(config1), _.keys(config2));
-  const added = _.difference(_.keys(config2), _.keys(config1));
-
-  const sharedStr = shared.reduce((acc, key) => {
-    if (config1[key] !== config2[key]) {
-      return [...acc, `  + ${key}: ${config2[key]}`, `  - ${key}: ${config1[key]}`];
-    }
-
-    return [...acc, `    ${key}: ${config1[key]}`];
-  }, []);
-  const deletedStr = deleted.map(key => `  - ${key}: ${config1[key]}`);
-  const addedStr = added.map(key => `  + ${key}: ${config2[key]}`);
-
-  return `{\n${[...sharedStr, ...deletedStr, ...addedStr].join('\n')}\n}`;
+  return `{\n${makeDiffsArr(obj1, obj2).join('\n')}\n}`;
 };
 
