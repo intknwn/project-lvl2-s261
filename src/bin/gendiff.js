@@ -8,6 +8,6 @@ program
   .arguments('<firstConfig> <secondConfig>')
   .description('Compares two configuration files and shows a difference.')
   .option('-f, --format [type]', 'Output format')
-  .action(console.log((firstConfig, secondConfig) => diff(firstConfig, secondConfig)));
+  .action(console.log(diff));
 
 program.parse(process.argv);
