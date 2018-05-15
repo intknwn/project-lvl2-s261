@@ -12,9 +12,9 @@ const getObject = (filePath) => {
   return JSON.parse(contents);
 };
 
-export default (path1, path2) => {
-  const config1 = getObject(path1);
-  const config2 = getObject(path2);
+export default (firstConfig, secondConfig) => {
+  const config1 = getObject(firstConfig);
+  const config2 = getObject(secondConfig);
   if (!config1 || !config2) {
     return undefined;
   }
