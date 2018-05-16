@@ -1,6 +1,6 @@
 {
   "name": "gendiff-by-intknwn",
-  "version": "1.4.0",
+  "version": "1.5.0",
   "description": "CLI utility which compares two configuration files and shows a difference.",
   "main": "index.js",
   "scripts": {
