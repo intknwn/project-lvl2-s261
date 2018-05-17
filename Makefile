@@ -1,7 +1,7 @@
 install:
 	npm install
 start:
-	npm run babel-node -- src/bin/gendiff.js before.yml after.yml
+	npm run babel-node -- src/bin/gendiff.js ./__tests__/__fixtures__/before_tree.json ./__tests__/__fixtures__/after_tree.json
 publish:
 	npm publish
 lint:

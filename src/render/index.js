@@ -1,19 +1,41 @@
+import _ from 'lodash';
+
 const prefix = {
+  joined: ' ',
   unmodified: ' ',
   added: '+',
   deleted: '-',
 };
 
-const toString = (obj) => {
-  const {
-    name, type, previousValue, value,
-  } = obj;
+const makeIndent = times => '  '.repeat(times);
 
-  if (type === 'modified') {
-    return `  + ${name}: ${value}\n  - ${name}: ${previousValue}`;
+const stringify = (obj, level) => {
+  if (!_.isObject(obj)) {
+    return obj;
   }
 
-  return `  ${prefix[type]} ${name}: ${value}`;
+  const i = makeIndent(level + 1);
+  const arr = _.keys(obj).map(key => `${i}  ${key}: ${obj[key]}`);
+
+  return `{\n${arr.join('\n')}\n${i}}`;
 };
 
-export default ast => ['{', ...ast.map(toString), '}'].join('\n');
+const toString = (obj, level) => {
+  const {
+    name, type, previousValue, currentValue, children,
+  } = obj;
+
+  const i = makeIndent(level);
+
+  if (children) {
+    return `${i}${prefix[type]} ${name}: {\n${children.map(o => toString(o, level + 1)).join('\n')}\n  ${i}}`;
+  }
+
+  if (type === 'modified') {
+    return `${i}+ ${name}: ${stringify(currentValue, level)}\n${i}- ${name}: ${stringify(previousValue, level)}`;
+  }
+
+  return `${i}${prefix[type]} ${name}: ${stringify(currentValue, level)}`;
+};
+
+export default ast => `{\n${ast.map(o => toString(o, 1)).join('\n')}\n}`;

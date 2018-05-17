@@ -13,7 +13,16 @@ const diffs = [
     generate: (obj1, obj2, key) => ({
       name: key,
       type: 'unmodified',
-      value: obj2[key],
+      currentValue: obj2[key],
+    }),
+  },
+  {
+    type: 'joined',
+    check: (obj1, obj2, key) => _.isObject(obj1[key]) && _.isObject(obj2[key]),
+    generate: (obj1, obj2, key, get) => ({
+      name: key,
+      type: 'joined',
+      children: get(obj1[key], obj2[key]),
     }),
   },
   {
@@ -23,7 +32,7 @@ const diffs = [
       name: key,
       type: 'modified',
       previousValue: obj1[key],
-      value: obj2[key],
+      currentValue: obj2[key],
     }),
   },
   {
@@ -32,7 +41,7 @@ const diffs = [
     generate: (obj1, obj2, key) => ({
       name: key,
       type: 'deleted',
-      value: obj1[key],
+      currentValue: obj1[key],
     }),
   },
   {
@@ -41,7 +50,7 @@ const diffs = [
     generate: (obj1, obj2, key) => ({
       name: key,
       type: 'added',
-      value: obj2[key],
+      currentValue: obj2[key],
     }),
   },
 ];
@@ -66,7 +75,7 @@ const getAST = (obj1, obj2) => {
   const keys = _.union(_.keys(obj1), _.keys(obj2));
   return keys.map((key) => {
     const { generate } = _.find(diffs, ({ check }) => check(obj1, obj2, key));
-    return generate(obj1, obj2, key);
+    return generate(obj1, obj2, key, getAST);
   });
 };
 
