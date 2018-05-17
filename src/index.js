@@ -63,14 +63,6 @@ const parsers = {
 
 const getParser = ext => parsers[ext];
 
-const getData = (filePath) => {
-  try {
-    return fs.readFileSync(filePath, 'utf8');
-  } catch (err) {
-    throw new Error(`${filePath}: No such file.`);
-  }
-};
-
 const getAST = (obj1, obj2) => {
   const keys = _.union(_.keys(obj1), _.keys(obj2));
   return keys.map((key) => {
@@ -80,8 +72,8 @@ const getAST = (obj1, obj2) => {
 };
 
 export default (firstConfig, secondConfig) => {
-  const data1 = getData(firstConfig);
-  const data2 = getData(secondConfig);
+  const data1 = fs.readFileSync(firstConfig, 'utf8');
+  const data2 = fs.readFileSync(secondConfig, 'utf8');
   const ext1 = path.extname(firstConfig);
   const ext2 = path.extname(secondConfig);
   const obj1 = getParser(ext1)(data1);
