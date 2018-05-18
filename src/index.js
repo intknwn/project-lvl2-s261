@@ -4,11 +4,10 @@ import path from 'path';
 import yaml from 'js-yaml';
 import ini from 'ini';
 
-import render from './render';
+import getRenders from './render';
 
 const diffs = [
   {
-    type: 'unmodified',
     check: (obj1, obj2, key) => obj1[key] === obj2[key],
     generate: (obj1, obj2, key) => ({
       name: key,
@@ -17,7 +16,6 @@ const diffs = [
     }),
   },
   {
-    type: 'joined',
     check: (obj1, obj2, key) => _.isObject(obj1[key]) && _.isObject(obj2[key]),
     generate: (obj1, obj2, key, get) => ({
       name: key,
@@ -26,7 +24,6 @@ const diffs = [
     }),
   },
   {
-    type: 'modified',
     check: (obj1, obj2, key) => obj1[key] && obj2[key] && obj1[key] !== obj2[key],
     generate: (obj1, obj2, key) => ({
       name: key,
@@ -36,7 +33,6 @@ const diffs = [
     }),
   },
   {
-    type: 'deleted',
     check: (obj1, obj2, key) => !_.has(obj2, key),
     generate: (obj1, obj2, key) => ({
       name: key,
@@ -45,7 +41,6 @@ const diffs = [
     }),
   },
   {
-    type: 'added',
     check: (obj1, obj2, key) => !_.has(obj1, key),
     generate: (obj1, obj2, key) => ({
       name: key,
@@ -71,7 +66,7 @@ const getAST = (obj1, obj2) => {
   });
 };
 
-export default (firstConfig, secondConfig) => {
+export default (firstConfig, secondConfig, format = 'tree') => {
   const data1 = fs.readFileSync(firstConfig, 'utf8');
   const data2 = fs.readFileSync(secondConfig, 'utf8');
   const ext1 = path.extname(firstConfig);
@@ -80,7 +75,12 @@ export default (firstConfig, secondConfig) => {
   const obj2 = getParser(ext2)(data2);
 
   const ast = getAST(obj1, obj2);
+  const render = getRenders(format);
 
-  return render(ast);
+  if (!render.toString) {
+    return `'${format}' output format not supported. Available options: ${_.keys(render.options).join(', ')}.`;
+  }
+
+  return render.toString(ast);
 };
 
