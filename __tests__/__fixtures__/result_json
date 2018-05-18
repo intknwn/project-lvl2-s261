@@ -1,0 +1,93 @@
+[
+  {
+    "name": "common",
+    "type": "joined",
+    "children": [
+      {
+        "name": "setting1",
+        "type": "unmodified",
+        "currentValue": "Value 1"
+      },
+      {
+        "name": "setting2",
+        "type": "deleted",
+        "currentValue": "200"
+      },
+      {
+        "name": "setting3",
+        "type": "modified",
+        "previousValue": true,
+        "currentValue": {
+          "key": "value"
+        }
+      },
+      {
+        "name": "setting6",
+        "type": "joined",
+        "children": [
+          {
+            "name": "key",
+            "type": "unmodified",
+            "currentValue": "value"
+          },
+          {
+            "name": "ops",
+            "type": "added",
+            "currentValue": "vops"
+          }
+        ]
+      },
+      {
+        "name": "setting4",
+        "type": "added",
+        "currentValue": "blah blah"
+      },
+      {
+        "name": "setting5",
+        "type": "added",
+        "currentValue": {
+          "key5": "value5"
+        }
+      }
+    ]
+  },
+  {
+    "name": "group1",
+    "type": "joined",
+    "children": [
+      {
+        "name": "baz",
+        "type": "modified",
+        "previousValue": "bas",
+        "currentValue": "bars"
+      },
+      {
+        "name": "foo",
+        "type": "unmodified",
+        "currentValue": "bar"
+      },
+      {
+        "name": "nest",
+        "type": "modified",
+        "previousValue": {
+          "key": "value"
+        },
+        "currentValue": "str"
+      }
+    ]
+  },
+  {
+    "name": "group2",
+    "type": "deleted",
+    "currentValue": {
+      "abc": "12345"
+    }
+  },
+  {
+    "name": "group3",
+    "type": "added",
+    "currentValue": {
+      "fee": "100500"
+    }
+  }
+]

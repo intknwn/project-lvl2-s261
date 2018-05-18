@@ -48,6 +48,12 @@ describe('Diff', () => {
     expect(data).toEqual(resultPlain);
   });
 
+  it('should work 8', () => {
+    const data = getDiff(getFixturePath('before_tree.ini'), getFixturePath('after_tree.ini'), 'json');
+    const resultPlain = fs.readFileSync(getFixturePath('result_json'), 'utf8');
+    expect(data).toEqual(resultPlain);
+  });
+
   it("shouldn't work 1", () => {
     function getError() {
       getDiff(getFixturePath('non-existent-before-file'), getFixturePath('after.json'));
