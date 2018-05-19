@@ -11,7 +11,7 @@ const types = {
   },
   modified: ({ name, previousValue, currentValue }, path) =>
     `Property '${getName(name, path)}' was updated. From ${getValue(previousValue)} to ${getValue(currentValue)}.`,
-  unmodified: () => [],
+  unmodified: () => null,
   added: ({ name, currentValue }, path) =>
     `Property '${getName(name, path)}' was added with ${getValue(currentValue)}.`,
   deleted: ({ name }, path) =>
@@ -19,6 +19,6 @@ const types = {
 };
 
 const toString = (ast, path = '') =>
-  _.flatten(ast.map(obj => types[obj.type](obj, path, toString))).join('\n');
+  ast.map(obj => types[obj.type](obj, path, toString)).filter(x => x).join('\n');
 
 export default ast => toString(ast);
